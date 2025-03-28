@@ -1,21 +1,39 @@
 'use client'
 
-import { LockIcon } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '@/app/redux';
+import { setSidebarOpen } from '@/state';
+import { Briefcase, Home, LockIcon, LucideIcon, Search, Settings, User, Users, X } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react'
 
 const Sidebar = () => {
+    const dispatch = useAppDispatch();
+
     const [showProjects, setShowProjects] = React.useState(true);
     const [showPriority, setShowPriority] = React.useState(true);
 
-    const sidebarClassNames = `fixed flex  flex-col h-[100%] justify-between shadow-xl
-    transition-all duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white w-64`
+    const { isSidebarOpen } = useAppSelector((state) => state.global);
+
+    const sidebarClassNames = `fixed flex flex-col h-[100%] justify-between shadow-xl
+    transition-all duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white
+    ${!isSidebarOpen ? "w-0 hidden" : "w-64"}`;
+
     return (
         <div className={sidebarClassNames}>
             {/* logo */}
             <div className='flex h-[100%] w-full flex-col justify-start'>
                 <div className='z-50 flex min-h-[56px] w-full items-center justify-between bg-white px-6'>
                     <div className='text-xl font-bold text-gray-800 dark:text-white'>KDLIST</div>
+                    {!isSidebarOpen ? null : (
+                        <button
+                            className="py-3"
+                            onClick={() => dispatch(setSidebarOpen(!isSidebarOpen))}
+                        >
+                            <X className="h-6 w-6 text-gray-800 hover:text-gray-500 cursor-pointer dark:text-white" />
+                        </button>
+                    )}
                 </div>
                 {/* team */}
                 <div className='flex items-center gap-5 px-7 py-4 border-y-[1.5px] border-gray-200 dark:border-white'>
@@ -29,8 +47,44 @@ const Sidebar = () => {
                     </div>
                 </div>
                 {/* navbar links */}
+                <nav className="z-10 w-full">
+                    <SidebarLink icon={Home} label="Home" href="/" />
+                    <SidebarLink icon={Briefcase} label="Timeline" href="/timeline" />
+                    <SidebarLink icon={Search} label="Search" href="/search" />
+                    <SidebarLink icon={Settings} label="Settings" href="/settings" />
+                    <SidebarLink icon={User} label="Users" href="/users" />
+                    <SidebarLink icon={Users} label="Teams" href="/teams" />
+                </nav>
             </div>
-        </div>
+        </div >
+    )
+}
+
+interface SidebarLinkProps {
+    href: string;
+    icon: LucideIcon;
+    label: string;
+}
+
+const SidebarLink = ({ href, icon: Icon, label }: SidebarLinkProps) => {
+    const pathname = usePathname();
+    const isActive = pathname === href || (pathname === "/" && href === "/dashboard");
+    return (
+        <Link href={href}>
+            <div
+                className={`relative flex cursor-pointer items-center gap-3 transition-colors hover:bg-gray-100 dark:bg-black dark:hover:bg-gray-700 ${isActive ? "bg-gray-100 text-white dark:bg-gray-600" : ""
+                    } justify-start px-8 py-3`}
+            >
+                {isActive && (
+                    <div className="absolute left-0 top-0 h-[100%] w-[5px] bg-blue-200" />
+                )}
+
+                <Icon className="h-6 w-6 text-gray-800 dark:text-gray-100" />
+                <span className={`font-medium text-gray-800 dark:text-gray-100`}>
+                    {label}
+                </span>
+            </div>
+        </Link>
     )
 }
 
