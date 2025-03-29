@@ -15,11 +15,15 @@ app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+/* ROUTES IMPORT */
+import projectRoutes from './routes/projectRoutes';
 
 /* ROUTES */
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
+
+app.use('/projects', projectRoutes);
 
 /* SERVER */
 const port = process.env.PORT || 3000;

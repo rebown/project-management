@@ -19,10 +19,13 @@ app.use((0, morgan_1.default)('common'));
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)());
+/* ROUTES IMPORT */
+const projectRoutes_1 = __importDefault(require("./routes/projectRoutes"));
 /* ROUTES */
 app.get('/', (req, res) => {
     res.send('Hello World');
 });
+app.use('/projects', projectRoutes_1.default);
 /* SERVER */
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
