@@ -1,2 +1,4 @@
+NextJS app backed up with NodeJS (Express)
+
 Data model
-![Alt text](server/data-modal.png?raw=true 'Data Model')
+![Data Model](./server/data-model.png)
