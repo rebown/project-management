@@ -5,6 +5,10 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
+/* ROUTES IMPORT */
+import projectRoutes from './routes/projectRoutes';
+import taskRoutes from './routes/taskRoutes';
+
 /* CONFIGURATIONS */
 const app = express();
 dotenv.config();
@@ -15,8 +19,6 @@ app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-/* ROUTES IMPORT */
-import projectRoutes from './routes/projectRoutes';
 
 /* ROUTES */
 app.get('/', (req, res) => {
@@ -24,6 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/projects', projectRoutes);
+app.use('/tasks', taskRoutes);
 
 /* SERVER */
 const port = process.env.PORT || 3000;
