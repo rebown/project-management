@@ -2,7 +2,8 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setSidebarOpen } from '@/state';
-import { Briefcase, Home, LockIcon, LucideIcon, Search, Settings, User, Users, X } from 'lucide-react';
+import { useGetProjectsQuery } from '@/state/api';
+import { Briefcase, ChevronDown, ChevronUp, Home, LockIcon, LucideIcon, Search, Settings, User, Users, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -13,6 +14,10 @@ const Sidebar = () => {
 
     const [showProjects, setShowProjects] = React.useState(true);
     const [showPriority, setShowPriority] = React.useState(true);
+
+    const { data: projects } = useGetProjectsQuery();
+
+    console.log(projects)
 
     const { isSidebarOpen } = useAppSelector((state) => state.global);
 
@@ -55,6 +60,38 @@ const Sidebar = () => {
                     <SidebarLink icon={User} label="Users" href="/users" />
                     <SidebarLink icon={Users} label="Teams" href="/teams" />
                 </nav>
+
+                {/* projects */}
+                <button onClick={() => setShowProjects((prev) => !prev)}
+                    className='flex w-full items-center justify-between px-8 py-3 text-gray-500'>
+                    <span>Show Projects</span>
+                    {showProjects
+                        ? <ChevronUp className='h-5 w-5' />
+                        : <ChevronDown className='h-5 w-5' />
+                    }
+                </button>
+                {showProjects && (
+                    projects?.map((project) => (
+                        <SidebarLink
+                            key={project.id}
+                            icon={Briefcase}
+                            label={project.name}
+                            href={`/projects/${project.id}`}
+                        />
+                    )))}
+
+                {/* PRIORITIES LINKS */}
+                <button
+                    onClick={() => setShowPriority((prev) => !prev)}
+                    className="flex w-full items-center justify-between px-8 py-3 text-gray-500"
+                >
+                    <span className="">Priority</span>
+                    {showPriority ? (
+                        <ChevronUp className="h-5 w-5" />
+                    ) : (
+                        <ChevronDown className="h-5 w-5" />
+                    )}
+                </button>
             </div>
         </div >
     )

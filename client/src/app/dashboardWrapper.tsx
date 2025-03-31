@@ -1,13 +1,16 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import Navbar from '@/app/(components)/Navbar'
-import Sidebar from '@/app/(components)/Sidebar'
+import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import StoreProvider, { useAppSelector } from './redux'
+import { useGetProjectsQuery } from '@/state/api'
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const { isDarkMode } = useAppSelector((state) => state.global);
     const { isSidebarOpen } = useAppSelector((state) => state.global);
+
+    const { data: projects } = useGetProjectsQuery();
 
     useEffect(() => {
         if (isDarkMode) {
@@ -26,7 +29,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 {/* navbar */}
                 <Navbar />
                 {/* content */}
-                navbar
+                {children}
             </main>
         </div>
     )
